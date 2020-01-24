@@ -1,0 +1,50 @@
+version: "3"
+
+services:
+  wagtail_blog_tut:
+    image: dom:django_tut
+    #build:
+      #context: .
+      #dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+      - 3500:3500
+    volumes:
+      - ./app:/app
+    command: tail -f /dev/null # python manage.py runserver 0.0.0.0:8000
+    # command: >
+      # sh -c "python manage.py wait_for_db &&
+      #       python manage.py migrate &&
+            # python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DJANGO_DEBUG=True
+      - DB_HOST=db
+      - DB_NAME=blog
+      - DB_USER=root
+      - DB_PASS=protect
+      - ALLOWED_HOST=localhost
+      - SECRET_KEY="!+#g6q5ki715%vcn)jzr5w&h873s83ys9)ub3q)&j%=^e)5n^5"
+      # - AWS_ACCESS_KEY_ID="awsaccesskeyid"
+      # - AWS_SECRET_ACCESS_KEY="awssecretaccesskey"
+      # - AWS_STORAGE_BUCKET_NAME="awsstoragebucketname"
+      # - AWS_STORAGE_REGION="awsstorageregion"
+  # password is over ridden in production with encrypted environment variable
+    restart: unless-stopped
+
+  db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=protect
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=test
+      - MYSQL_DATABASE=blog
+    ports:
+      - 3306:3306
+    volumes:
+      - mysqldata:/var/lib/mysql
+    restart: unless-stopped
+# password is over ridden in production with encrypted environment variable
+
+
+volumes:
+  mysqldata:
