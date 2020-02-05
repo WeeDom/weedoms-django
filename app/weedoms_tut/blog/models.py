@@ -42,6 +42,16 @@ class BlogPage(RoutablePageMixin, Page):
     def get_posts(self):
         return PostPage.objects.descendant_of(self).live()
 
+    @route(r'^search/$')
+    def post_search(self, request, *args, **kwargs):
+        search_query = request.GET.get('q', None)
+        self.posts = self.get_posts()
+        if search_query:
+            self.posts = self.posts.filter(body__contains=search_query)
+            self.search_term = search_query
+            self.search_type = 'search'
+        return Page.serve(self, request, *args, **kwargs)
+
     @route(r'^tag/(?P<tag>[-\w]+)/$')
     def post_by_tag(self, request, tag, *args, **kwargs):
         self.search_type = 'tag'
@@ -60,8 +70,8 @@ class BlogPage(RoutablePageMixin, Page):
     def post_list(self, request, *args, **kwargs):
         self.posts = self.get_posts()
         return Page.serve(self, request, *args, **kwargs)
-def get_posts(self):
-    return PostPage.objects.descendant_of(self).live().order_by('-date')
+    def get_posts(self):
+        return PostPage.objects.descendant_of(self).live().order_by('-date')
 
     @route(r'^(\d{4})/$')
     @route(r'^(\d{4})/(\d{2})/$')

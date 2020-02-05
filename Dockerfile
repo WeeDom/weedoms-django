@@ -7,6 +7,7 @@ ENV PYTHONUNBUFFERED 1
 RUN apt-get update && apt-get install -y python-dev python3-dev default-libmysqlclient-dev apache2 apache2-utils ssl-cert libapache2-mod-wsgi-py3 locales
 RUN pip install --upgrade pip
 COPY ./requirements.txt /requirements.txt
+RUN pip install wheel
 RUN pip install -r /requirements.txt
 
 ENV APACHE_CONFDIR=/etc/apache2

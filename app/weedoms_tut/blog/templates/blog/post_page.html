@@ -1,4 +1,4 @@
-{% load wagtailcore_tags wagtailroutablepage_tags%}
+{% load wagtailcore_tags wagtailroutablepage_tags markdown_deux_tags %}
 
 {% block content %}
 <h1>{{ post.title }}</h1>
@@ -11,12 +11,12 @@
 
 
 {% if page.tags.all.count %}
-<div class="tags">
-    <h3>Tags</h3>
-    {% for tag in page.tags.all %}
-    <a href="{% routablepageurl blog_page "post_by_tag" tag.slug %}">{{ tag }}</a>
-    {% endfor %}
-</div>
+    <div class="tags">
+        <h3>Tags</h3>
+        {% for tag in page.tags.all %}
+            This is a tag <a href="{% routablepageurl blog_page "post_by_tag" tag.slug %}">{{ tag }}</a>
+        {% endfor %}
+    </div>
 {% endif %}
 
 {% with categories=page.categories.all %}

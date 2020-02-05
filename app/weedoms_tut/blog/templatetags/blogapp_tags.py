@@ -1,10 +1,32 @@
 #!/home/dominic/weedom-django/bin/python3
 
 # -*- coding: utf-8 -*-
-from django.template import Library, loader
-from django.core.urlresolvers import resolve
+from django.template import Library
+from ..models import BlogCategory as Category
+from ..models import Tag
 
 register = Library()
+
+
+@register.inclusion_tag('blog/component/tags_list.html',
+                        takes_context=True)
+def tags_list(context, limit=None):
+    blog_page = context['blog_page']
+    tags = Tag.objects.all()
+    if limit:
+        tags = tags[:limit]
+    return {
+        'blog_page': blog_page, 'request': context['request'], 'tags': tags}
+
+
+@register.inclusion_tag('blog/components/categories_list.html',
+                        takes_context=True)
+def categories_list(context):
+    blog_page = context['blog_page']
+    categories = Category.objects.all()
+    return {
+        'blog_page': blog_page, 'request': context['request'],
+        'categories': categories}
 
 
 @register.simple_tag()
